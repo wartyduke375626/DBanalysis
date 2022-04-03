@@ -1,0 +1,93 @@
+Table ping
+==========
+contains records from ping measurements
+- Primary key: (ip_addr, ping_date)
+- Foreign keys:
+	(ip_addr) references hosts(ip_addr)
+- Number of rows: 84 869 803
+
+Column ip_addr
+--------------
+the IP address of the host that was pinged
+- Type: cidr
+- Nullable: NO
+- Default value: not provided
+
+Column ping_rttmin
+------------------
+minimum ping time
+- Type: real
+- Nullable: YES
+- Default value: not provided
+
+Column ping_rttmax
+------------------
+maximum ping time
+- Type: real
+- Nullable: YES
+- Default value: not provided
+
+Column ping_rttavg
+------------------
+average ping time
+- Type: real
+- Nullable: YES
+- Default value: not provided
+
+Column ping_rttmdev
+-------------------
+mean deviation of ping time
+- Type: real
+- Nullable: YES
+- Default value: not provided
+
+Column ping_ploss
+-----------------
+the percentage of lost ping packets or an error code if negative value
+- Type: integer
+- Nullable: YES
+- Default value: not provided
+
+Column ping_date
+----------------
+the date when this entry was registered
+- Type: timestamp without time zone
+- Nullable: NO
+- Default value: now()
+
+
+Output from psql \d command:
+============================
+
+                             Table "public.ping"
+    Column    |            Type             | Collation | Nullable | Default 
+--------------+-----------------------------+-----------+----------+---------
+ ip_addr      | cidr                        |           | not null | 
+ ping_rttmin  | real                        |           |          | 
+ ping_rttmax  | real                        |           |          | 
+ ping_rttavg  | real                        |           |          | 
+ ping_rttmdev | real                        |           |          | 
+ ping_ploss   | integer                     |           |          | 
+ ping_date    | timestamp without time zone |           | not null | now()
+Indexes:
+    "ping_pkey" PRIMARY KEY, btree (ip_addr, ping_date)
+Foreign-key constraints:
+    "ping_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+
+
+Sample (random 10 rows from table):
+===================================
+
+      ip_addr       | ping_rttmin | ping_rttmax | ping_rttavg | ping_rttmdev | ping_ploss |         ping_date          
+--------------------+-------------+-------------+-------------+--------------+------------+----------------------------
+ 213.201.221.162/32 |      21.855 |      22.505 |      22.176 |        0.246 |          0 | 2009-05-11 06:09:53.746052
+ 218.186.12.10/32   |             |             |             |              |        100 | 2009-05-11 06:13:37.237716
+ 221.3.131.66/32    |     402.034 |     409.939 |     406.506 |        3.382 |          0 | 2009-05-11 06:14:29.186345
+ 217.153.56.221/32  |             |             |             |              |        100 | 2009-05-11 06:12:22.969227
+ 212.27.32.132/32   |      29.973 |      31.019 |      30.384 |        0.325 |          0 | 2009-05-11 06:06:41.589475
+ 213.151.206.10/32  |             |             |             |              |         -1 | 2009-05-11 06:08:44.01905
+ 213.205.36.90/32   |             |             |             |              |        100 | 2009-05-11 06:10:11.440789
+ 217.67.18.105/32   |             |             |             |              |        100 | 2009-05-11 06:11:28.109716
+ 217.112.87.148/32  |      28.857 |      32.442 |      29.353 |        1.044 |          0 | 2009-05-11 06:11:31.710011
+ 218.56.61.114/32   |     408.528 |     416.276 |     412.281 |        3.379 |          0 | 2009-05-11 06:12:40.986137
+(10 rows)

@@ -1,0 +1,51 @@
+Table h_types
+=============
+contains descriptions of defined host types
+- Primary key: rank_code
+- Number of rows: 4
+
+Column rank_code
+----------------
+the code of the host type
+- Type: integer
+- Nullable: NO 
+- Default value: not provided
+
+Column rank
+-----------
+name of the host type
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+Column rank_description
+-----------------------
+description of the host type
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+
+Output from psql \d command:
+============================
+
+                   Table "public.h_types"
+      Column      |  Type   | Collation | Nullable | Default 
+------------------+---------+-----------+----------+---------
+ rank_code        | integer |           | not null | 
+ rank             | text    |           |          | 
+ rank_description | text    |           |          | 
+Indexes:
+    "h_types_pkey" PRIMARY KEY, btree (rank_code)
+
+
+Content (complete):
+===================
+
+ rank_code |   rank   |                    rank_description                    
+-----------+----------+--------------------------------------------------------
+         0 | HOST     | Ordinary host, details unspecified
+         1 | SUSPECT  | Suspicious host, doing something strange
+         2 | SCANNER  | Scanner host, sends various requests to us
+         3 | ATTACKER | Attacker host, tries to find and exploit some weakness
+(4 rows)

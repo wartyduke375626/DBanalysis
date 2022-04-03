@@ -1,0 +1,50 @@
+Table source_types
+==================
+contains descriptions of defined source types
+- Primary key: source_code
+- Number of rows: 3
+
+Column source_code
+------------------
+the code of the source type
+- Type: integer
+- Nullable: NO 
+- Default value: not provided
+
+Column source_type
+------------------
+name of the source_type
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+Column source_description
+-------------------------
+description of the source type
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+
+Output from psql \d command:
+============================
+
+                  Table "public.source_types"
+       Column       |  Type   | Collation | Nullable | Default 
+--------------------+---------+-----------+----------+---------
+ source_code        | integer |           | not null | 
+ source_type        | text    |           |          | 
+ source_description | text    |           |          | 
+Indexes:
+    "source_types_pkey" PRIMARY KEY, btree (source_code)
+
+
+Content (complete):
+===================
+
+ source_code | source_type |            source_description             
+-------------+-------------+-------------------------------------------
+           0 | LOG         | The host address apeared in our log files
+           1 | DNS         | The host is DNS server
+           2 | TRACEROUTE  | The host is a router
+(3 rows)

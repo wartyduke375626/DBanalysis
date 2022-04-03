@@ -1,0 +1,69 @@
+Table source
+============
+contains information about IP addresses that were used as hosts during respective measurements
+- Primary key: (ip_addr, source_code)
+- Foreign keys:
+	(ip_addr) references hosts(ip_addr)
+- Number of rows: 77 323
+
+Column ip_addr
+--------------
+the IP address of the host
+- Type: cidr
+- Nullable: NO
+- Default value: not provided
+
+Column source_code
+------------------
+an integer value that references the type of the source specified in table source_types
+- Type: integer
+- Nullable: NO
+- Default value: not provided
+
+Column source_ref
+-----------------
+the number of entries registered by the source
+- Type: integer
+- Nullable: YES
+- Default value: 1
+
+Column source_date
+------------------
+the date when this entry was registered
+- Type: timestamp without time zone
+- Nullable: YES
+- Default value: now()
+
+
+Output from psql \d command:
+============================
+
+                           Table "public.source"
+   Column    |            Type             | Collation | Nullable | Default 
+-------------+-----------------------------+-----------+----------+---------
+ ip_addr     | cidr                        |           | not null | 
+ source_code | integer                     |           | not null | 
+ source_ref  | integer                     |           |          | 1
+ source_date | timestamp without time zone |           |          | now()
+Indexes:
+    "source_pkey" PRIMARY KEY, btree (ip_addr, source_code)
+Foreign-key constraints:
+    "source_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+
+
+Sample (random 10 rows from table):
+===================================
+
+      ip_addr       | source_code | source_ref |        source_date         
+--------------------+-------------+------------+----------------------------
+ 69.59.137.140/32   |           0 |          2 | 2009-05-17 06:14:40.569369
+ 83.141.21.166/32   |           0 |          1 | 2009-05-11 06:15:56.150909
+ 74.6.17.189/32     |           0 |         18 | 2008-11-06 05:42:57.404312
+ 91.127.219.176/32  |           0 |          3 | 2011-10-23 07:28:43.473966
+ 217.175.237.230/32 |           0 |          1 | 2007-05-28 19:00:26.281396
+ 78.106.207.69/32   |           0 |         23 | 2008-04-09 04:15:35.34683
+ 78.98.69.203/32    |           0 |         22 | 2009-05-07 06:15:45.224571
+ 82.99.30.57/32     |           0 |         94 | 2008-11-11 05:52:42.516294
+ 147.175.195.36/32  |           0 |         12 | 2010-01-17 04:15:28.432273
+ 93.97.170.15/32    |           0 |         14 | 2009-04-28 06:20:20.136141
+(10 rows)

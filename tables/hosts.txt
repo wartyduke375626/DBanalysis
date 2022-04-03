@@ -1,0 +1,79 @@
+Table hosts
+===========
+contains IP addresses that were used during respective measurements
+- Primary key: ip_addr
+- Number of rows: 77 225
+
+Column ip_addr
+--------------
+the IP address of the host
+- Type: cidr
+- Nullable: NO
+- Default value: not provided
+
+Column rank_code
+----------------
+an integer value that references the type of the host specified in table h_types
+- Type: integer
+- Nullable: YES
+- Default value: 0
+
+Column enter_date
+-----------------
+the date when this entry was registered
+- Type: timestamp without time zone
+- Nullable: YES
+- Default value: now()
+
+Column source
+-------------
+the source this host was registered from
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+Column comment
+--------------
+optional comment on this entry
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+
+Output from psql \d command:
+============================
+
+                           Table "public.hosts"
+   Column   |            Type             | Collation | Nullable | Default 
+------------+-----------------------------+-----------+----------+---------
+ ip_addr    | cidr                        |           | not null | 
+ rank_code  | integer                     |           |          | 0
+ enter_date | timestamp without time zone |           |          | now()
+ source     | text                        |           |          | 
+ comment    | text                        |           |          | 
+Indexes:
+    "hosts_pkey" PRIMARY KEY, btree (ip_addr)
+Referenced by:
+    TABLE "dns" CONSTRAINT "dns_dns_server1_fkey" FOREIGN KEY (dns_server1) REFERENCES hosts(ip_addr)
+    TABLE "dns" CONSTRAINT "dns_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+    TABLE "ping" CONSTRAINT "ping_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+    TABLE "source" CONSTRAINT "source_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+    TABLE "topology" CONSTRAINT "topology_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+
+
+Sample (random 10 rows from table):
+===================================
+
+      ip_addr       | rank_code |         enter_date         |       source        | comment 
+--------------------+-----------+----------------------------+---------------------+---------
+ 82.208.151.245/32  |         0 | 2007-05-28 19:00:26.256155 | lepos.fiit.stuba.sk | 
+ 128.138.238.174/32 |         0 | 2007-05-28 19:00:26.362139 | lepos.fiit.stuba.sk | 
+ 222.83.251.105/32  |         0 | 2007-05-28 19:00:26.726358 | lepos.fiit.stuba.sk | 
+ 81.170.68.105/32   |         0 | 2007-05-28 19:00:26.736267 | lepos.fiit.stuba.sk | 
+ 81.170.68.108/32   |         0 | 2007-05-28 19:00:26.747066 | lepos.fiit.stuba.sk | 
+ 81.170.68.115/32   |         0 | 2007-05-28 19:00:26.763333 | lepos.fiit.stuba.sk | 
+ 81.170.68.118/32   |         0 | 2007-05-28 19:00:26.771586 | lepos.fiit.stuba.sk | 
+ 81.170.68.123/32   |         0 | 2007-05-28 19:00:26.785091 | lepos.fiit.stuba.sk | 
+ 81.170.68.129/32   |         0 | 2007-05-28 19:00:26.801024 | lepos.fiit.stuba.sk | 
+ 81.170.68.161/32   |         0 | 2007-05-28 19:00:26.881526 | lepos.fiit.stuba.sk | 
+(10 rows)

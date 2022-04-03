@@ -1,0 +1,109 @@
+Table topology
+==============
+contains records from traceroute measurements
+- Primary key: (ip_addr, t_date)
+- Foreign keys:
+	(ip_addr) references hosts(ip_addr)
+- Number of rows: 10 249 718
+
+Column ip_addr
+--------------
+the IP address of the host that was traced
+- Type: cidr
+- Nullable: NO
+- Default value: not provided
+
+Column t_roundtrip
+------------------
+the latency for each hop from router to router
+- Type: numeric[]
+- Nullable: YES
+- Default value: not provided
+
+Column t_hops
+-------------
+the number of traceroute hops
+- Type: integer
+- Nullable: YES
+- Default value: not provided
+
+Column t_status
+---------------
+???
+- Type: character(1)
+- Nullable: YES
+- Default value: not provided
+
+Column t_route
+--------------
+the IP addresses of routers the packet has gone through
+- Type: cidr[]
+- Nullable: YES
+- Default value: not provided
+
+Column t_flags
+--------------
+???
+- Type: text[]
+- Nullable: YES
+- Default value: not provided
+
+Column t_comment
+----------------
+optional coment on this entry
+- Type: text
+- Nullable: YES
+- Default value: not provided
+
+Column t_date
+-------------
+the date when this entry was registered
+- Type: timestamp without time zone
+- Nullable: NO
+- Default value: now()
+
+Column t_yearweek
+-----------------
+???
+- Type: integer
+- Nullable: NO
+- Default value: not provided
+
+
+Output from psql \d command:
+============================
+
+                          Table "public.topology"
+   Column    |            Type             | Collation | Nullable | Default 
+-------------+-----------------------------+-----------+----------+---------
+ ip_addr     | cidr                        |           | not null | 
+ t_roundtrip | numeric[]                   |           |          | 
+ t_hops      | integer                     |           |          | 
+ t_status    | character(1)                |           |          | 
+ t_route     | cidr[]                      |           |          | 
+ t_flags     | text[]                      |           |          | 
+ t_comment   | text                        |           |          | 
+ t_date      | timestamp without time zone |           | not null | now()
+ t_yearweek  | integer                     |           |          | 
+Indexes:
+    "topology_pkey" PRIMARY KEY, btree (ip_addr, t_date)
+Foreign-key constraints:
+    "topology_ip_addr_fkey" FOREIGN KEY (ip_addr) REFERENCES hosts(ip_addr) ON DELETE CASCADE
+
+
+Sample (random 10 rows from table):
+===================================
+
+      ip_addr      |     t_roundtrip     | t_hops | t_status |                       t_route                       |  t_flags   | t_comment |           t_date           | t_yearweek 
+-------------------+---------------------+--------+----------+-----------------------------------------------------+------------+-----------+----------------------------+------------
+ 0.0.161.69/32     |                     |     -1 | E        |                                                     |            |           | 2009-06-16 03:23:47.249628 |           
+ 68.87.215.162/32  |                     |     -1 | E        |                                                     |            |           | 2012-01-08 13:05:40.106485 |           
+ 67.198.201.2/32   |                     |     -1 | E        |                                                     |            |           | 2012-01-08 12:41:19.254521 |           
+ 70.50.96.70/32    |                     |     -1 | E        |                                                     |            |           | 2012-01-08 13:39:56.51494  |           
+ 221.215.97.162/32 | {0.406,0.655,0.608} |      3 | I        | {147.175.98.1/32,147.175.159.1/32,147.175.159.1/32} | {"","",!H} |           | 2010-07-31 05:22:08.807007 |           
+ 67.195.112.50/32  |                     |     -1 | E        |                                                     |            |           | 2012-01-08 12:39:53.716137 |           
+ 70.174.1.136/32   |                     |     -1 | E        |                                                     |            |           | 2012-01-08 13:47:02.247543 |           
+ 147.175.99.38/32  | {0.424,1.766}       |      2 | C        | {147.175.98.1/32,147.175.99.38/32}                  | {"",""}    |           | 2009-06-19 04:34:50.182701 |           
+ 147.175.97.1/32   | {0.767}             |      1 | C        | {147.175.97.1/32}                                   | {""}       |           | 2009-06-19 04:34:21.349174 |           
+ 67.228.177.191/32 |                     |     -1 | E        |                                                     |            |           | 2012-01-08 12:45:36.651379 |           
+(10 rows)
