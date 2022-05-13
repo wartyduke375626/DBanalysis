@@ -29,7 +29,7 @@ the number of traceroute hops
 
 Column t_status
 ---------------
-???
+traceroute return status
 - Type: character(1)
 - Nullable: YES
 - Default value: not provided
@@ -43,7 +43,7 @@ the IP addresses of routers the packet has gone through
 
 Column t_flags
 --------------
-???
+flags set in between every two routers of traceroute
 - Type: text[]
 - Nullable: YES
 - Default value: not provided
