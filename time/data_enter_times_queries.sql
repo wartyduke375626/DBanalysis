@@ -1,4 +1,4 @@
-/* This sqript contains queries used to determine time intervals in which no entry was registered. Since th eserver runs PostgreSQL version 8.1.9 which does not support function generate_series(timestamp), generate_series(integer) is used instead (interpreted as UNIX timestamp) and then converted to timestamp. */
+/* This script contains queries used to determine time intervals in which no entry was registered. Since th eserver runs PostgreSQL version 8.1.9 which does not support function generate_series(timestamp), generate_series(integer) is used instead (interpreted as UNIX timestamp) and then converted to timestamp. */
 
 /* Dates of first entry for tables hosts, ping and topology: */
 SELECT min(enter_date) FROM hosts; /* 2007-05-28 19:00:23 = 1180371623 (UNIX) */
@@ -17,6 +17,9 @@ CREATE TEMPORARY TABLE all_days_hosts AS (
     FROM generate_series(1180371623, 1372651073, 86400) /* 86400 = day length in seconds */
 );
 
+/* Note: generate_series() generates timestamps inbetween min and max time found out in previous queries. The generation step is of 86400 seconds which is the exact day length in seconds.
+  This means it will generate all days contained within the [min, max] interval, inclusive. This attribute is then cast to date type which will extract the day part of the timestamp. */
+
 SELECT a.day
 FROM all_days_hosts a
 WHERE NOT EXISTS (
@@ -28,7 +31,7 @@ WHERE NOT EXISTS (
 /* Complementary query. */
 SELECT a.day
 FROM all_days_hosts a
-WHERE NOT EXISTS (
+WHERE EXISTS (
     SELECT *
     FROM hosts h
     WHERE h.enter_date::date = a.day
@@ -53,7 +56,7 @@ WHERE NOT EXISTS (
 /* Complementary query. */
 SELECT a.day
 FROM all_days_ping a
-WHERE NOT EXISTS (
+WHERE EXISTS (
     SELECT *
     FROM ping p
     WHERE p.ping_date::date = a.day
@@ -77,7 +80,7 @@ WHERE NOT EXISTS (
 /* Complementary query. */
 SELECT a.day
 FROM all_days_t a
-WHERE NOT EXISTS (
+WHERE EXISTS (
     SELECT *
     FROM topology t
     WHERE t.t_date::date = a.day
